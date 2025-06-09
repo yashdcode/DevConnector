@@ -7,6 +7,8 @@ express() is a top-level function exported by the Express module.
 It's used to initialize a new Express application.
 It returns an instance of the Express application object.
 
+In Express.js, app.get() is used to define a route handler for HTTP GET requests to a specific path. It essentially tells the server what to do when it receives a GET request at a given URL.
+
 Key features of the Express application object:
 Routing:
 It provides methods like app.get(), app.post(), app.put(), etc., to define routes for handling different HTTP requests.

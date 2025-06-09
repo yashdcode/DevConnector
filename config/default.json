@@ -1,3 +1,4 @@
 {
+  "jwtToken": "myjwttoken",
   "mongoURL": "mongodb+srv://yashduddalwar:suMB126HugUf29Op@devconnector.t4p63pv.mongodb.net/?retryWrites=true&w=majority&appName=DevConnector"
 }

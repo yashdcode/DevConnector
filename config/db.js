@@ -6,11 +6,11 @@ const connectDB = async () => {
   try {
     const res = await mongoose.connect(db);
 
-    console.log("mongoDB database connected.....");
+    console.log("MongoDB database connected...");
   } catch (error) {
-    console.log(error.message);
-    // proces exit
-    process.exit(1);
+    console.error(error.message);
+    // process exit
+    process.exit(1); //
   }
 };
 
