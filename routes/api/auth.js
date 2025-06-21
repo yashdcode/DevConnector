@@ -9,8 +9,8 @@ const User = require("../../models/User");
 const auth = require("../../middleware/auth");
 
 //@route GET api/auth
-//@desc Test route
-//@access Public
+//@desc Get USer By token
+//@access Private
 
 router.get("/", auth, async (req, res) => {
   try {
@@ -31,23 +31,31 @@ router.post(
   "/",
   [
     check("email", "Please include the valid email").isEmail(),
-    check("password", "password is required").isLength({
-      min: 6,
-    }),
+    check("password", "password is required")
+      .isLength({
+        min: 6,
+      })
+      .exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { email, password } = req.body;
     try {
-      const { email, password } = req.body;
       let user = await User.findOne({ email });
-      const match = await bcrypt.compare(password, user.password);
-      if (!user || !match) {
+      if (!user) {
         return res
           .status(400)
-          .json({ errors: [{ mesg: "Invalid credentials" }] });
+          .json({ errors: [{ msg: "Invalid credentials" }] });
+      }
+      const match = await bcrypt.compare(password, user.password);
+
+      if (match) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "Invalid Credentials" }] });
       }
       const payload = {
         user: {
