@@ -1,8 +1,11 @@
-import React, { Fragment, useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import React, { Fragment, useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { Link, useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
+import { login } from "../../actions/auth";
 
-const Login = () => {
+const Login = ({ login, isAuthenticated }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -15,28 +18,20 @@ const Login = () => {
     });
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     const { email, password } = formData;
-    const user = {
-      email,
-      password,
-    };
-
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const body = JSON.stringify(user);
-      const response = await axios.post("/api/users", body, config);
-      console.info(response);
-    } catch (error) {
-      console.log("error", error);
-    }
+    console.log(email, password);
+    login(email, password);
   };
 
+  useEffect(() => {
+    console.log("isAuthenticated");
+
+    if (isAuthenticated) {
+      return navigate("/dashboard");
+    }
+  }, [isAuthenticated]);
   return (
     <Fragment>
       <h1 className="large text-primary">Log In</h1>
@@ -50,6 +45,7 @@ const Login = () => {
             placeholder="Email Address"
             name="email"
             onChange={(e) => handleInputfieldChange(e)}
+            required
           />
         </div>
         <div className="form-group">
@@ -59,6 +55,7 @@ const Login = () => {
             name="password"
             minLength="6"
             onChange={(e) => handleInputfieldChange(e)}
+            required
           />
         </div>
 
@@ -70,4 +67,13 @@ const Login = () => {
     </Fragment>
   );
 };
-export default Login;
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
+};
+
+export default connect(mapStateToProps, { login })(Login);

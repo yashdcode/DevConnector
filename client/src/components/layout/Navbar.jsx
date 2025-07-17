@@ -1,17 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { logout } from "../../actions/auth";
 
-const Navbar = () => {
-  return (
-    <nav className="navbar bg-dark">
-      <h1>
-        <Link to="/">
-          <i className="fas fa-code"></i> DevConnector
-        </Link>
-      </h1>
-      <ul>
+const Navbar = ({ isAuthenticated, logout, loading }) => {
+  console.log("APP RUNNNING");
+  const guestLinks = () => {
+    return (
+      <>
         <li>
-          <a href="#">Developers</a>
+          <Link to="/profiles">Developers</Link>
         </li>
         <li>
           <Link to="/register">Register</Link>
@@ -19,9 +18,48 @@ const Navbar = () => {
         <li>
           <Link to="/login">Login</Link>
         </li>
-      </ul>
+      </>
+    );
+  };
+  const authLinks = () => {
+    return (
+      <>
+        <li>
+          <Link to="/profiles">Developers</Link>
+        </li>
+        <li>
+          <Link to="/dashboard">
+            <i className="fas fa-user" />{" "}
+            <span className="hide-sm">Dashboard</span>
+          </Link>
+        </li>
+        <li>
+          <a onClick={logout} href="#!">
+            <i className="fas fa-sign-out-alt" />{" "}
+            <span className="hide-sm">Logout</span>
+          </a>
+        </li>
+      </>
+    );
+  };
+  return (
+    <nav className="navbar bg-dark">
+      <h1>
+        <Link to="/">
+          <i className="fas fa-code"></i> DevConnector
+        </Link>
+      </h1>
+      <ul>{!loading && isAuthenticated ? authLinks() : guestLinks()}</ul>
     </nav>
   );
 };
-
-export default Navbar;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  loading: state.auth.loading,
+});
+Navbar.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  logout: PropTypes.func,
+  loading: PropTypes.bool,
+};
+export default connect(mapStateToProps, { logout })(Navbar);

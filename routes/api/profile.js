@@ -6,6 +6,7 @@ const Profile = require("../../models/Profile");
 const User = require("../../models/User");
 const auth = require("../../middleware/auth");
 const request = require("request");
+const Post = require("../../models/Post");
 const { check, validationResult } = require("express-validator");
 
 //@route GET api/profile/me
@@ -45,7 +46,7 @@ router.get("/", async (req, res) => {
 // @access   private
 router.delete("/", auth, async (req, res) => {
   try {
-    // Deleting Profile
+    await Post.deleteMany({ user: req.user.id }); // Deleting Profile
     await Profile.findOneAndDelete({ user: req.user.id });
     // Deleting User
     await User.findOneAndDelete({ _id: req.user.id });
@@ -238,6 +239,7 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log("inside POST");
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -256,6 +258,8 @@ router.post(
       linkedin,
       facebook,
     } = req.body;
+
+    console.log(req.body);
 
     let profileFields = {};
     profileFields.user = req.user.id;
@@ -278,24 +282,25 @@ router.post(
       profileFields.githubusername = githubusername;
     }
     if (skills) {
+      console.log("skills", typeof skills);
       profileFields.skills = skills.split(",").map((skill) => skill.trim());
     }
 
     profileFields.social = {};
     if (facebook) {
-      profileFields.facebook = facebook;
+      profileFields.social.facebook = facebook;
     }
     if (linkedin) {
-      profileFields.linkedin = linkedin;
+      profileFields.social.linkedin = linkedin;
     }
     if (status) {
-      profileFields.instagram = instagram;
+      profileFields.social.instagram = instagram;
     }
     if (twitter) {
-      profileFields.twitter = twitter;
+      profileFields.social.twitter = twitter;
     }
     if (youtube) {
-      profileFields.youtube = youtube;
+      profileFields.social.youtube = youtube;
     }
 
     try {
@@ -312,7 +317,7 @@ router.post(
         );
         return res.json(profile);
       }
-
+      console.log("profileFields", profileFields);
       profile = new Profile(profileFields);
       profile = await profile.save();
       return res.json(profile);

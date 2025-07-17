@@ -21,7 +21,6 @@ router.get("/", auth, async (req, res) => {
     res.status(500).server("server error");
   }
 });
-module.exports = router;
 
 //@route POST api/auth
 //@desc Login and authenticate User
@@ -30,19 +29,18 @@ module.exports = router;
 router.post(
   "/",
   [
-    check("email", "Please include the valid email").isEmail(),
-    check("password", "password is required")
-      .isLength({
-        min: 6,
-      })
-      .exists(),
+    check("email", "Please include a valid email").isEmail(),
+    check("password", "Password is required").exists().isLength({ min: 6 }),
   ],
   async (req, res) => {
+    console.log("USERS");
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
     const { email, password } = req.body;
+
     try {
       let user = await User.findOne({ email });
       if (!user) {
@@ -50,18 +48,22 @@ router.post(
           .status(400)
           .json({ errors: [{ msg: "Invalid credentials" }] });
       }
+
       const match = await bcrypt.compare(password, user.password);
 
-      if (match) {
+      // ✅ Fix is here: reject only if password doesn't match
+      if (!match) {
         return res
           .status(400)
-          .json({ errors: [{ msg: "Invalid Credentials" }] });
+          .json({ errors: [{ msg: "Invalid credentials" }] });
       }
+
       const payload = {
         user: {
           id: user.id,
         },
       };
+
       jwt.sign(
         payload,
         config.get("jwtToken"),
