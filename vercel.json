@@ -1,7 +1,10 @@
 {
   "version": 2,
   "builds": [
-  {"src": "server.js", "use": "@vercel/mode"}
+  {
+      "src": "client/package.json",
+      "use": "@vercel/static-build"
+    }
   ],
   "routes": [
    {"src": "/(.*)/", "dest": "server.js"}
