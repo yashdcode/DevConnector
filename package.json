@@ -7,8 +7,7 @@
     "start": "node server",
     "server": "nodemon server",
     "client": "npm run dev --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heruko-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Yash Duddalwar",
   "license": "ISC",
