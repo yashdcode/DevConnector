@@ -9,9 +9,6 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  GET_PROFILE,
-  PROFILE_ERROR,
-  CLEAR_PROFILE,
 } from "./types";
 import { setAuthToken } from "../util/setAuthToken";
 
@@ -95,7 +92,4 @@ export const register =
   };
 
 //LOGOUT USER
-export const logout = () => (dispatch) => {
-  dispatch({ type: LOGOUT });
-  dispatch({ type: CLEAR_PROFILE });
-};
+export const logout = () => ({ type: LOGOUT });

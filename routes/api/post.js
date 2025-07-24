@@ -27,7 +27,7 @@ router.post(
         name: user.name,
       });
       const post = await newPost.save();
-      res.json({ post });
+      res.json(post);
     } catch (error) {
       console.log("error", error);
       return res.status(500).json({ error: "server error" });
@@ -58,7 +58,7 @@ router.get("/:id", auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) {
-      return res.status(404).json({ mesg: "Post not found" });
+      return res.status(404).json({ msg: "Post not found" });
     }
     res.json(post);
   } catch (error) {
@@ -75,14 +75,14 @@ router.delete("/:id", auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) {
-      return res.status(404).json({ mesg: "Post not found" });
+      return res.status(404).json({ msg: "Post not found" });
     }
     //Check user
     if (post.user.toString() !== req.user.id) {
       return res.status(401).json({ msg: "User not authorized" });
     }
     await post.deleteOne();
-    res.json({ mesg: "Post removed" });
+    res.json({ msg: "Post removed" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Server error" });
@@ -111,7 +111,7 @@ router.put("/like/:id", auth, async (req, res) => {
     }
     post.likes.unshift({ user: req.user.id });
     post = await post.save();
-    res.json({ post });
+    res.json(post.likes);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Server error" });
@@ -142,7 +142,7 @@ router.put("/unlike/:id", auth, async (req, res) => {
       (like) => like.user.toString() !== req.user.id
     );
     post = await post.save();
-    res.json({ post });
+    return res.json(post.likes);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Server error" });
@@ -155,7 +155,7 @@ router.put("/unlike/:id", auth, async (req, res) => {
 
 router.post(
   "/comment/:id",
-  [auth, [check("text", "text is reuired").not().isEmpty()]],
+  [auth, [check("text", "text is required").not().isEmpty()]],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -173,7 +173,7 @@ router.post(
       console.log("post", post);
       post.comments.unshift(comment);
       await post.save();
-      res.json({ comment });
+      res.json(post.comments);
     } catch (error) {
       console.log("error", error);
       return res.status(500).json({ error: "server error" });

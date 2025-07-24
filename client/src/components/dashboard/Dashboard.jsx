@@ -8,7 +8,6 @@ import DashboardActions from "./DashboardActions";
 import Education from "./Education";
 import Experience from "./Experience";
 import { deleteAccount } from "../../actions/profile";
-import profile from "../../reducers/profile";
 
 const Dashboard = ({
   auth: { user },

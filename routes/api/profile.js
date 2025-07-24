@@ -282,8 +282,9 @@ router.post(
       profileFields.githubusername = githubusername;
     }
     if (skills) {
-      console.log("skills", typeof skills);
-      profileFields.skills = skills.split(",").map((skill) => skill.trim());
+      profileFields.skills = Array.isArray(skills)
+        ? skills
+        : skills.split(",").map((skill) => skill.trim());
     }
 
     profileFields.social = {};

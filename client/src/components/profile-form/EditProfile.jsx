@@ -54,11 +54,11 @@ const EditProfile = ({
     getCurrentProfile();
     setFormData({
       ...profile,
-      facebook: profile.social.facebook || "",
-      twitter: profile.social.twitter || "",
-      instagram: profile.social.instagram || "",
-      youtube: profile.social.youtube || "",
-      linkedin: profile.social.linkedin || "",
+      facebook: profile?.social?.facebook || "",
+      twitter: profile?.social?.twitter || "",
+      instagram: profile?.social?.instagram || "",
+      youtube: profile?.social?.youtube || "",
+      linkedin: profile?.social?.linkedin || "",
     });
 
     console.log("Profile", profile);
