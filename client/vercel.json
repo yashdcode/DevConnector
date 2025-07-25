@@ -1,1 +1,6 @@
-
+"rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://dev-connector-backend-bbpc.vercel.app/api/$1"
+    }
+  ]
