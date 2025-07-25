@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5000", // your backend API
+        target: "https://dev-connector-backend-bbpc.vercel.app/", // your backend API
         changeOrigin: true,
         secure: false, // if you're using https locally and have self-signed cert
       },
