@@ -3,10 +3,6 @@
     {
       "source": "/api/(.*)",
       "destination": "https://dev-connector-backend-bbpc.vercel.app/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }
